@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type Scraper struct {
@@ -16,7 +17,8 @@ type Scraper struct {
 
 func NewScraper() *Scraper {
 	return &Scraper{
-		Client: &http.Client{},
+		// Initialize the HTTP client with a default timeout
+		Client: &http.Client{Timeout: 10 * time.Second},
 	}
 }
 
@@ -30,6 +32,7 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []strin
 			pageURL := strings.Replace(baseURL, "{page}", fmt.Sprintf("%d", page), 1)
 			log.Printf("Scraping page %d", page)
 			req, err := http.NewRequest("GET", pageURL, nil)
+
 			if err != nil {
 				log.Printf("Error creating request: %v", err)
 				continue
