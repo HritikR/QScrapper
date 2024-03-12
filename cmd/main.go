@@ -24,7 +24,7 @@ func main() {
 	cfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
 		log.Print("Configuration not found or invalid configuration file. Resuming without proxiesc.")
-		cfg = &config.Config{Proxies: []string{}, Delay: 5 * time.Second}
+		cfg = &config.Config{Proxies: []string{}, Delay: 5}
 	}
 
 	// Initialize proxy manager and get all proxies
@@ -49,5 +49,5 @@ func main() {
 	}
 
 	// Execute the scrape with all proxies available for rotation
-	s.Scrape(*startPage, *endPage, *baseURL, cfg.Delay, cfg.Path, allProxies, processData)
+	s.Scrape(*startPage, *endPage, *baseURL, time.Second*time.Duration(cfg.Delay), cfg.Path, allProxies, processData)
 }
