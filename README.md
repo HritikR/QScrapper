@@ -1,5 +1,5 @@
 ```
-/web-scraper
+/nichecrawler
     /cmd
         main.go
     /config
@@ -12,6 +12,8 @@
         logger.go
     /storage
         storage.go
+    /parser
+        parser.go
     config.json
     README.md
 ```

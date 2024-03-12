@@ -23,7 +23,7 @@ func main() {
 	cfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
 		log.Print("Configuration not found or invalid configuration file. Resuming without proxiesc.")
-		cfg = &config.Config{Proxies: []string{}, Delay: 10 * time.Second}
+		cfg = &config.Config{Proxies: []string{}, Delay: 5 * time.Second}
 	}
 
 	// Initialize proxy manager and get all proxies
@@ -38,7 +38,7 @@ func main() {
 	s := scraper.NewScraper()
 
 	// Define the processData callback
-	processData := func(data map[string]interface{}) {
+	processData := func(data string) {
 		if err := dataStorage.Save(data); err != nil {
 			log.Printf("Failed to save data: %v", err)
 		}

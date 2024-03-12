@@ -1,12 +1,12 @@
 package scraper
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"nichecrawler/parser"
 	"strings"
 	"time"
 )
@@ -22,7 +22,7 @@ func NewScraper() *Scraper {
 	}
 }
 
-func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Duration, proxies []string, processData func(data map[string]interface{})) {
+func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Duration, proxies []string, processData func(string)) {
 	// If no proxies are provided, add an empty string to the slice to run the loop once without a proxy
 	if len(proxies) == 0 {
 		proxies = append(proxies, "")
@@ -44,8 +44,11 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Dura
 
 		for page := startPage; page <= endPage; page++ {
 			pageURL := strings.Replace(baseURL, "{page}", fmt.Sprintf("%d", page), 1)
-			log.Printf("Scraping page %d", page)
+			log.Printf("Scraping page %s", pageURL)
 			req, err := http.NewRequest("GET", pageURL, nil)
+
+			// Add a user agent header to the request
+			req.Header.Set("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
 
 			if err != nil {
 				log.Printf("Error creating request: %v", err)
@@ -70,13 +73,10 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Dura
 				continue
 			}
 
-			var result map[string]interface{}
-			if err := json.Unmarshal(body, &result); err != nil {
-				log.Printf("Error unmarshalling response: %v", err)
-				continue
-			}
+			// Parse JSON
+			data := parser.ParseJSONData(string(body), "entities.#.content.entity")
 
-			processData(result)
+			processData(data)
 			log.Printf("Processed page %d", page)
 			log.Printf("Sleeping for %v seconds before next request...", delay.Seconds())
 			// Add a delay before the next request
