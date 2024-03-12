@@ -78,6 +78,12 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Dura
 
 			processData(data)
 			log.Printf("Processed page %d", page)
+
+			if page == endPage {
+				log.Printf("Finished scraping all pages")
+				break
+			}
+
 			log.Printf("Sleeping for %v seconds before next request...", delay.Seconds())
 			// Add a delay before the next request
 			time.Sleep(delay)
