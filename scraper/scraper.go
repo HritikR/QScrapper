@@ -23,10 +23,24 @@ func NewScraper() *Scraper {
 }
 
 func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []string, processData func(data map[string]interface{})) {
+	// If no proxies are provided, add an empty string to the slice to run the loop once without a proxy
+	if len(proxies) == 0 {
+		proxies = append(proxies, "")
+	}
+
 	for _, proxyURL := range proxies {
-		log.Printf("Using proxy: %s", proxyURL)
-		proxy, _ := url.Parse(proxyURL)
-		s.Client.Transport = &http.Transport{Proxy: http.ProxyURL(proxy)}
+		if proxyURL != "" {
+			log.Printf("Using proxy: %s", proxyURL)
+			proxy, err := url.Parse(proxyURL)
+			if err != nil {
+				log.Printf("Error parsing proxy URL: %v", err)
+				continue // Skip to the next proxy if the current one is invalid
+			}
+			s.Client.Transport = &http.Transport{Proxy: http.ProxyURL(proxy)}
+		} else {
+			log.Printf("Not using any proxy")
+			s.Client.Transport = &http.Transport{} // Reset to default transport without proxy
+		}
 
 		for page := startPage; page <= endPage; page++ {
 			pageURL := strings.Replace(baseURL, "{page}", fmt.Sprintf("%d", page), 1)
@@ -56,6 +70,8 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []strin
 				continue
 			}
 
+			// log.Printf("Received response: %s", string(body))
+
 			var result map[string]interface{}
 			if err := json.Unmarshal(body, &result); err != nil {
 				log.Printf("Error unmarshalling response: %v", err)
@@ -63,6 +79,10 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []strin
 			}
 
 			processData(result)
+
+			log.Printf("Sleeping for 2 seconds before next request...")
+			// Add a delay of 2 seconds before the next request
+			time.Sleep(2 * time.Second)
 		}
 	}
 }

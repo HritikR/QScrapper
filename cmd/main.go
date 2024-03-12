@@ -21,7 +21,8 @@ func main() {
 	cfgPath, _ := filepath.Abs("./config.json")
 	cfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
-		log.Fatalf("Failed to load configuration: %v", err)
+		log.Print("Configuration not found or invalid configuration file. Resuming without proxiesc.")
+		cfg = &config.Config{Proxies: []string{}}
 	}
 
 	// Initialize proxy manager and get all proxies
@@ -29,7 +30,8 @@ func main() {
 	allProxies := pm.GetAllProxies()
 
 	// Initialize the storage system
-	dataStorage := storage.NewStorage("./scraped_data.json")
+	storageFile := "output.json"
+	dataStorage := storage.NewStorage(storageFile)
 
 	// Initialize the scraper
 	s := scraper.NewScraper()
