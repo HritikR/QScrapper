@@ -1,5 +1,5 @@
 ```
-/nichecrawler
+/qscrapper
     /cmd
         main.go
     /config

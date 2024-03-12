@@ -1,4 +1,4 @@
-module nichecrawler
+module qscrapper
 
 go 1.20
 

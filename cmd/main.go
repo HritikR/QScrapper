@@ -4,11 +4,11 @@ package main
 import (
 	"flag"
 	"log"
-	"nichecrawler/config"
-	"nichecrawler/proxy"
-	"nichecrawler/scraper"
-	"nichecrawler/storage"
 	"path/filepath"
+	"qscrapper/config"
+	"qscrapper/proxy"
+	"qscrapper/scraper"
+	"qscrapper/storage"
 	"time"
 )
 

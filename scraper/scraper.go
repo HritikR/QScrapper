@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"nichecrawler/parser"
+	"qscrapper/parser"
 	"strings"
 	"time"
 )
