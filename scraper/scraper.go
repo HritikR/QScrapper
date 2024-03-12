@@ -22,7 +22,7 @@ func NewScraper() *Scraper {
 	}
 }
 
-func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Duration, proxies []string, processData func(string)) {
+func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Duration, dataPath string, proxies []string, processData func(string)) {
 	// If no proxies are provided, add an empty string to the slice to run the loop once without a proxy
 	if len(proxies) == 0 {
 		proxies = append(proxies, "")
@@ -74,7 +74,7 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Dura
 			}
 
 			// Parse JSON
-			data := parser.ParseJSONData(string(body), "entities.#.content.entity")
+			data := parser.ParseJSONData(string(body), dataPath)
 
 			processData(data)
 			log.Printf("Processed page %d", page)

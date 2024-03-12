@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Proxies []string      `json:"proxies"`
 	Delay   time.Duration `json:"delay"`
+	Path    string        `json:"path"`
 }
 
 // LoadConfig reads a configuration file and decodes it into a Config struct

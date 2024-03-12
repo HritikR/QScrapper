@@ -45,5 +45,5 @@ func main() {
 	}
 
 	// Execute the scrape with all proxies available for rotation
-	s.Scrape(*startPage, *endPage, *baseURL, cfg.Delay, allProxies, processData)
+	s.Scrape(*startPage, *endPage, *baseURL, cfg.Delay, cfg.Path, allProxies, processData)
 }
