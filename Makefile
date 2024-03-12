@@ -1,7 +1,7 @@
 # Makefile
 
 # The binary to build (just the basename).
-BIN := main
+BIN := qscrapper
 
 # Set this to your actual build and output directory
 BUILD_DIR := ./build
