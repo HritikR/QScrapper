@@ -22,7 +22,7 @@ func NewScraper() *Scraper {
 	}
 }
 
-func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []string, processData func(data map[string]interface{})) {
+func (s *Scraper) Scrape(startPage, endPage int, baseURL string, delay time.Duration, proxies []string, processData func(data map[string]interface{})) {
 	// If no proxies are provided, add an empty string to the slice to run the loop once without a proxy
 	if len(proxies) == 0 {
 		proxies = append(proxies, "")
@@ -70,8 +70,6 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []strin
 				continue
 			}
 
-			// log.Printf("Received response: %s", string(body))
-
 			var result map[string]interface{}
 			if err := json.Unmarshal(body, &result); err != nil {
 				log.Printf("Error unmarshalling response: %v", err)
@@ -79,10 +77,10 @@ func (s *Scraper) Scrape(startPage, endPage int, baseURL string, proxies []strin
 			}
 
 			processData(result)
-
-			log.Printf("Sleeping for 2 seconds before next request...")
-			// Add a delay of 2 seconds before the next request
-			time.Sleep(2 * time.Second)
+			log.Printf("Processed page %d", page)
+			log.Printf("Sleeping for %v seconds before next request...", delay.Seconds())
+			// Add a delay before the next request
+			time.Sleep(delay)
 		}
 	}
 }

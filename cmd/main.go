@@ -9,6 +9,7 @@ import (
 	"nichecrawler/scraper"
 	"nichecrawler/storage"
 	"path/filepath"
+	"time"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 	cfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
 		log.Print("Configuration not found or invalid configuration file. Resuming without proxiesc.")
-		cfg = &config.Config{Proxies: []string{}}
+		cfg = &config.Config{Proxies: []string{}, Delay: 10 * time.Second}
 	}
 
 	// Initialize proxy manager and get all proxies
@@ -44,5 +45,5 @@ func main() {
 	}
 
 	// Execute the scrape with all proxies available for rotation
-	s.Scrape(*startPage, *endPage, *baseURL, allProxies, processData)
+	s.Scrape(*startPage, *endPage, *baseURL, cfg.Delay, allProxies, processData)
 }
