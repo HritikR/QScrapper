@@ -16,6 +16,7 @@ func main() {
 	startPage := flag.Int("start", 1, "Start page number")
 	endPage := flag.Int("end", 1, "End page number")
 	baseURL := flag.String("url", "", "Base URL with placeholder for page number")
+	output := flag.String("out", "output.json", "Output file path")
 	flag.Parse()
 
 	// Load configuration
@@ -32,6 +33,9 @@ func main() {
 
 	// Initialize the storage system
 	storageFile := "output.json"
+	if *output != "" {
+		storageFile = *output
+	}
 	dataStorage := storage.NewStorage(storageFile)
 
 	// Initialize the scraper
