@@ -46,7 +46,7 @@ Edit `config.json` to specify your scraping parameters:
 1. Clone the repository:
 
 ```bash
-git clone [https://yourrepository/qscrapper.git](https://github.com/HritikR/QScrapper)
+git clone https://github.com/HritikR/QScrapper
 cd qscrapper
 ```
 
